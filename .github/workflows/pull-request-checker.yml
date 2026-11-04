@@ -1,0 +1,57 @@
+name: Pull Request Checker
+
+on:
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Build'in geçmesi için yer tutucu değerler; gerçek anahtarlar CI'da kullanılmaz.
+      BASE_URL: https://gelecekbilimde.net/
+      YOUTUBE_API: https://www.googleapis.com/youtube
+      YOUTUBE_API_KEY: ci-placeholder
+      CHANNEL_ID: ci-placeholder
+      PLAYLIST_ID: ci-placeholder
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Create placeholder google-services.json
+        run: |
+          cat > app/google-services.json <<'JSON'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "ci-placeholder",
+              "storage_bucket": "ci-placeholder.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+                  "android_client_info": { "package_name": "com.teyyihan.gelecekbilimde" }
+                },
+                "api_key": [ { "current_key": "ci-placeholder" } ]
+              }
+            ],
+            "configuration_version": "1"
+          }
+          JSON
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
