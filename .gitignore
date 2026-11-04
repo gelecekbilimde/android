@@ -13,5 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
-/config
-/.idea/**
+/config/*
+!/config/*.example
+/.idea/**/app/google-services.json

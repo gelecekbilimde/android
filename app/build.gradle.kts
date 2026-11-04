@@ -1,5 +1,4 @@
 import java.io.FileInputStream
-import java.lang.System.load
 import java.util.Properties
 
 plugins {
@@ -15,9 +14,23 @@ plugins {
 
 
 
+// Yapılandırma config/gelecekbilimde-config.properties dosyasından okunur
+// (örnek: config/gelecekbilimde-config.properties.example). Dosya yoksa aynı isimli
+// ortam değişkenlerine bakılır; böylece CI'da dosya oluşturmadan da build alınabilir.
+val configFile = rootProject.file("config/gelecekbilimde-config.properties")
 val properties = Properties().apply {
-    load(FileInputStream(File(rootProject.rootDir, "config\\gelecekbilimde-config.properties")))
+    if (configFile.exists()) {
+        FileInputStream(configFile).use { load(it) }
+    } else {
+        logger.warn("config/gelecekbilimde-config.properties bulunamadı, ortam değişkenleri kullanılacak.")
+    }
 }
+
+fun config(key: String): String =
+    properties.getProperty(key) ?: System.getenv(key)
+    ?: throw GradleException(
+        "'$key' tanımlı değil. config/gelecekbilimde-config.properties dosyasına veya ortam değişkenlerine ekleyin."
+    )
 
 hilt {
     enableAggregatingTask = true
@@ -40,11 +53,11 @@ android {
 
 
         /** Secret Properties**/
-        buildConfigField("String", "BASE_URL", "\"${properties.getProperty("BASE_URL")}\"")
-        buildConfigField("String", "YOUTUBE_API", "\"${properties.getProperty("YOUTUBE_API")}\"")
-        buildConfigField("String", "YOUTUBE_API_KEY", "\"${properties.getProperty("YOUTUBE_API_KEY")}\"")
-        buildConfigField("String", "CHANNEL_ID", "\"${properties.getProperty("CHANNEL_ID")}\"")
-        buildConfigField("String", "PLAYLIST_ID", "\"${properties.getProperty("PLAYLIST_ID")}\"")
+        buildConfigField("String", "BASE_URL", "\"${config("BASE_URL")}\"")
+        buildConfigField("String", "YOUTUBE_API", "\"${config("YOUTUBE_API")}\"")
+        buildConfigField("String", "YOUTUBE_API_KEY", "\"${config("YOUTUBE_API_KEY")}\"")
+        buildConfigField("String", "CHANNEL_ID", "\"${config("CHANNEL_ID")}\"")
+        buildConfigField("String", "PLAYLIST_ID", "\"${config("PLAYLIST_ID")}\"")
         /**Secret Properties**/
 
 
