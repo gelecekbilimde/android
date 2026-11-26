@@ -13,6 +13,12 @@
 .externalNativeBuild
 .cxx
 local.properties
-/config/*
-!/config/*.example
-/.idea/**/app/google-services.json
+/config
+/.idea/**
+
+# Environment & secret files
+.env*
+!.env.example
+*.jks
+*.keystore
+google-services.json
