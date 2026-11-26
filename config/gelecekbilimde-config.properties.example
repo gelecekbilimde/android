@@ -1,0 +1,11 @@
+# Bu dosyayı config/gelecekbilimde-config.properties olarak kopyalayın.
+# Gerçek değerleri içeren dosya git'e eklenmez.
+
+# WordPress sitesinin kök adresi (sonunda / olmalı)
+BASE_URL=https://gelecekbilimde.net/
+# YouTube Data API kök adresi
+YOUTUBE_API=https://www.googleapis.com/youtube
+# Google Cloud Console'dan alınan, Android uygulamasıyla kısıtlanmış API anahtarı
+YOUTUBE_API_KEY=
+CHANNEL_ID=
+PLAYLIST_ID=
