@@ -15,3 +15,10 @@
 local.properties
 /config
 /.idea/**
+
+# Environment & secret files
+.env*
+!.env.example
+*.jks
+*.keystore
+google-services.json
